@@ -1,0 +1,26 @@
+{
+  "name": "@dwidge/function-simplify",
+  "version": "1.0.0",
+  "description": "Tools for simplifying JavaScript functions.",
+  "license": "BSL-1.0",
+  "author": "DWJ",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "dependencies": {
+    "acorn": "^8.8.1",
+    "acorn-walk": "^8.2.0",
+    "astring": "^1.8.4",
+    "await-sleep": "^0.0.1",
+    "just-typeof": "^3.2.0"
+  },
+  "devDependencies": {
+    "jest": "^29.3.1"
+  }
+}
