@@ -2,7 +2,7 @@ const acorn = require("acorn");
 const walk = require("acorn-walk");
 const astring = require("astring");
 const typeOf = require("type-of");
-const sleep = require("await-sleep");
+const { count } = require("@dwidge/diff-step");
 
 function parse(fn) {
   return acorn.parse(fn.toString(), { ecmaVersion: 2020 });
@@ -58,24 +58,29 @@ function simplify(ast) {
   return ast;
 }
 
-async function sequence(code, max = 1000) {
-  const steps = [];
-  let ast = parse(code);
-  let before = "",
-    after = generate(ast);
-  while (after !== before && max-- > 0) {
-    steps.push(after);
-    before = after;
-    await sleep(0);
-    ast = simplify(ast);
-    after = generate(ast);
+function isValidFunction(fstring) {
+  try {
+    new Function(fstring);
+  } catch (e) {
+    return false;
   }
-  return steps;
+  return true;
 }
 
-module.exports = {
-  parse,
-  simplify,
-  generate,
-  sequence,
-};
+function* sequence(code, { minStep = 1, maxSteps = 1000 } = {}) {
+  let ast = parse(code);
+  let prev = "";
+  let i = 0;
+  while (i < maxSteps) {
+    const next = generate(ast);
+    if (next === prev) break;
+    if (isValidFunction(next) && count(prev, next) >= minStep) {
+      yield next;
+      prev = next;
+    }
+    ast = simplify(ast);
+    i++;
+  }
+}
+
+module.exports = sequence;

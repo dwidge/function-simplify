@@ -1,4 +1,4 @@
-const { parse, generate, simplify, sequence } = require("./index");
+const simplify = require("./index");
 
 function foo() {
   console.log("Hello, world!");
@@ -21,11 +21,19 @@ const foo2 = function foo() {
   console.log("Goodbye, world!");
 };
 
-test("simplify", () => {
-  expect(generate(simplify(parse(foo)))).toBe(generate(parse(foo1)));
-  expect(generate(simplify(parse(foo1)))).toBe(generate(parse(foo2)));
+test("sequence", async () => {
+  expect([...simplify(foo)].length).toBe(9);
+  expect([...simplify(foo)].slice(0, 3)).toEqual([
+    [...simplify(foo)][0],
+    [...simplify(foo1)][0],
+    [...simplify(foo2)][0],
+  ]);
 });
 
-test("sequence", async () => {
-  expect((await sequence(foo)).length).toBe(9);
+test("minStep", async () => {
+  expect([...simplify(foo, { minStep: 50 })].length).toBe(3);
+});
+
+test("maxSteps", async () => {
+  expect([...simplify(foo, { maxSteps: 3 })].length).toBe(3);
 });

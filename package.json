@@ -14,10 +14,10 @@
     "LICENSE"
   ],
   "dependencies": {
+    "@dwidge/diff-step": "^1.0.1",
     "acorn": "^8.8.1",
     "acorn-walk": "^8.2.0",
     "astring": "^1.8.4",
-    "await-sleep": "^0.0.1",
     "type-of": "^2.0.1"
   },
   "devDependencies": {
