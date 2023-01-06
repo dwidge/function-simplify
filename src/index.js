@@ -67,6 +67,17 @@ function isValidFunction(fstring) {
   return true;
 }
 
+/**
+ * Generates a sequence of valid functions by progressively simplifying
+ * the abstract syntax tree (AST) of the provided code.
+ *
+ * @param {string} code - The code to generate the sequence from.
+ * @param {object} [options] - Optional parameters.
+ * @param {number} [options.minStep=1] - The minimum number of changes required
+ *                                       to consider a step valid.
+ * @param {number} [options.maxSteps=1000] - The maximum number of steps to generate.
+ * @returns {Iterable.<string>} A generator object that produces the sequence of valid functions.
+ */
 function* sequence(code, { minStep = 1, maxSteps = 1000 } = {}) {
   let ast = parse(code);
   let prev = "";
