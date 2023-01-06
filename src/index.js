@@ -1,7 +1,7 @@
 const acorn = require("acorn");
 const walk = require("acorn-walk");
 const astring = require("astring");
-const typeOf = require("just-typeof");
+const typeOf = require("type-of");
 const sleep = require("await-sleep");
 
 function parse(fn) {
