@@ -1,45 +1,55 @@
-# function-simplify
+# @dwidge/function-simplify
 
-Tools for simplifying JavaScript functions and generating a sequence of steps that lead to the most basic version of the function. If reversed, this can be useful for showing how to write the function step by step.
+Takes a JavaScript function and generates a sequence of steps that lead to the most basic version of the function. If reversed, this can be useful for showing how to write the function step by step.
 
-## functions
+## Overview
 
-This package provides four functions for simplifying and manipulating JavaScript code:
+This function takes a JavaScript function and optional stepSize and maxSteps parameters, and returns a generator that yields progressively simpler function strings.
 
-| Function | Description                                                                                                                               |
-| -------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| parse    | This function takes a JavaScript function as a string and returns an abstract syntax tree (AST) representation of that function.          |
-| generate | This function takes an AST and returns a string representation of the corresponding JavaScript function.                                  |
-| simplify | This function takes an AST and returns a simplified version of that AST.                                                                  |
-| sequence | This function takes a JavaScript function and an optional max parameter, and returns a promise that resolves to an array of strings. [^1] |
-
-[^1]: Where each subsequent string in the array is a simplified version of the previous one. The first element in the array is the original function as a string, and the last element is the fully simplified version. The length of the array is capped at max.
+Each subsequent string in the array is a simplified version of the previous one. The first element in the array is the original function as a string, and the last element is an empty string. Only valid function strings that can be passed to `Function()` are returned.
 
 ## Installation
 
-To install this package, run the following command:
+```
+npm i @dwidge/function-simplify
+```
 
-`npm install @dwidge/function-simplify`
+## Options
+
+```js
+function* simplify(code, { minStep = 1, maxSteps = 1000 } = {})
+```
+
+| Name     | Type                | Required | Default | Description                                                       |
+| -------- | ------------------- | -------- | ------- | ----------------------------------------------------------------- |
+| code     | string              | Yes      | N/A     | The code to generate the sequence from.                           |
+| options  | object              | No       | {}      | Optional parameters.                                              |
+| minStep  | number              | No       | 1       | The minimum difference in characters between steps.               |
+| maxSteps | number              | No       | 1000    | The maximum number of internal iterations.                        |
+| returns  | `Iterable.<string>` | N/A      | N/A     | A generator object that produces the sequence of valid functions. |
 
 ## Usage
 
-To use this package, require it in your project and call the desired function:
-
 ```js
-const {
-  parse,
-  generate,
-  simplify,
-  sequence,
-} = require("@dwidge/function-simplify");
+const simplify = require("@dwidge/function-simplify");
 
-const ast = parse("function foo() { console.log('Hello, world!') }");
-const simplifiedAst = simplify(ast);
-const fooString = generate(simplifiedAst);
+[...simplify("function foo() { console.log('Hello, world!') }")]
+  .reverse()
+  .map((s) => console.log(s.length, s));
+```
 
-sequence(fooString, 300).then((sequence) =>
-  sequence.map((s) => console.log(s.length, s))
-);
+```
+0
+
+18 function foo() {}
+
+36 function foo() {
+  console.log();
+}
+
+51 function foo() {
+  console.log('Hello, world!');
+}
 ```
 
 ## Testing
@@ -53,8 +63,7 @@ To run the test suite for this package, use the following command:
 acorn  
 acorn-walk  
 astring  
-just-typeof  
-await-sleep  
+type-of  
 ChatGPT
 
 ## License
