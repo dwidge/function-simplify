@@ -33,9 +33,11 @@ function* simplify(code, { minStep = 1, maxSteps = 1000 } = {})
 ```js
 const simplify = require("@dwidge/function-simplify");
 
-[...simplify("function foo() { console.log('Hello, world!') }")]
-  .reverse()
-  .map((s) => console.log(s.length, s));
+function foo() {
+  console.log("Hello, world!");
+}
+
+[...simplify(foo)].reverse().map((s) => console.log(s.length, s));
 ```
 
 ```
@@ -53,8 +55,6 @@ const simplify = require("@dwidge/function-simplify");
 ```
 
 ## Testing
-
-To run the test suite for this package, use the following command:
 
 `npm test`
 
